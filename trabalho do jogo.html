@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fuga do Chinelo - Menu</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f4f4f4;
+    margin:0;
+    padding:0;
+}
+section {
+    display: none;
+    padding: 20px;
+}
+section.active {
+    display: block;
+}
+button.icon {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    margin: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 20px;
+    border: 2px solid #333;
+    background: #fff;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+button.icon:hover {
+    background: #e0e0e0;
+}
+#game {
+    width: 600px;
+    height: 200px;
+    border: 3px solid black;
+    margin: 20px auto;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+#player {
+    width: 40px;
+    height: 40px;
+    background: blue;
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+}
+#obstacle {
+    width: 30px;
+    height: 40px;
+    background: red;
+    position: absolute;
+    bottom: 0;
+    right: -40px;
+    animation: obstacle 2s infinite linear;
+}
+@keyframes obstacle {
+    0% { right: -40px; }
+    100% { right: 600px; }
+}
+.jump {
+    animation: jump 0.5s;
+}
+@keyframes jump {
+    0% { bottom: 0; }
+    50% { bottom: 80px; }
+    100% { bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Página inicial: Menu -->
+<section id="menu" class="active">
+    <h1>🩴 Fuga do Chinelo</h1>
+    <p>Escolha uma opção:</p>
+    <div>
+        <button class="icon" onclick="showSection('historia')">📖 História</button>
+        <button class="icon" onclick="showSection('objetivos')">🎯 Objetivos</button>
+        <button class="icon" onclick="showSection('comoJogar')">🕹️ Como Jogar</button>
+        <button class="icon" onclick="showSection('jogo')">🏃 Jogar</button>
+    </div>
+</section>
+
+<!-- Página 1: História -->
+<section id="historia">
+    <h1>🏃 Fuga do Chinelo</h1>
+    <h2>História</h2>
+    <p>João tem 12 anos e deveria estar fazendo sua lição de casa.</p>
+    <p>Mas ele decidiu jogar videogame escondido e acabou derrubando refrigerante no sofá novo.</p>
+    <p>Quando sua mãe descobriu... ela apareceu com o temido chinelo na mão! 🩴</p>
+    <h3>Agora João precisa correr para escapar!</h3>
+    <button onclick="showSection('menu')">🔙 Voltar ao Menu</button>
+</section>
+
+<!-- Página 2: Objetivos -->
+<section id="objetivos">
+    <h1>🎯 Objetivos do Jogo</h1>
+    <p>Seu objetivo é fugir da mãe o maior tempo possível.</p>
+    <p>🏃 Correr sem parar</p>
+    <p>🚧 Desviar dos obstáculos</p>
+    <p>⭐ Fazer a maior pontuação</p>
+    <h3>Itens especiais:</h3>
+    <p>🍪 Biscoito = velocidade</p>
+    <p>🧃 Suco = turbo</p>
+    <p>🧸 Brinquedo = faz a mãe tropeçar</p>
+    <button onclick="showSection('menu')">🔙 Voltar ao Menu</button>
+</section>
+
+<!-- Página 3: Como Jogar -->
+<section id="comoJogar">
+    <h1>🕹️ Como Jogar</h1>
+    <p>João corre automaticamente.</p>
+    <h3>Controles:</h3>
+    <p>⬅️ Esquerda = mover</p>
+    <p>➡️ Direita = mover</p>
+    <p>⬆️ Cima = pular (ESPAÇO)</p>
+    <p>⬇️ Baixo = deslizar</p>
+    <p>Desvie dos obstáculos e não deixe sua mãe te alcançar!</p>
+    <button onclick="showSection('menu')">🔙 Voltar ao Menu</button>
+</section>
+
+<!-- Página 4: Jogo -->
+<section id="jogo">
+    <h1>🏃 Fuja da Mãe!</h1>
+    <p>Pressione ESPAÇO para pular</p>
+    <div id="game">
+        <div id="player"></div>
+        <div id="obstacle"></div>
+    </div>
+    <button onclick="resetGame()">🔄 Reiniciar</button>
+    <button onclick="showSection('menu')">🔙 Voltar ao Menu</button>
+</section>
+
+<script>
+// Função para trocar páginas
+function showSection(id) {
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// Jogo
+var player = document.getElementById("player");
+var obstacle = document.getElementById("obstacle");
+
+document.addEventListener("keydown", function(event){
+    if(event.code == "Space"){
+        player.classList.add("jump");
+        setTimeout(function(){ player.classList.remove("jump"); }, 500);
+    }
+});
+
+// Checagem de colisão
+var checkDead = setInterval(function(){
+    var playerBottom = parseInt(window.getComputedStyle(player).getPropertyValue("bottom"));
+    var obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
+    if(obstacleLeft < 90 && obstacleLeft > 50 && playerBottom < 40){
+        alert("💀 Sua mãe te pegou com o chinelo!");
+        obstacle.style.animation = "none";
+    }
+},10);
+
+// Reiniciar animação
+function resetGame(){
+    obstacle.style.animation = "obstacle 2s infinite linear";
+    player.style.bottom = "0px";
+    showSection('menu');
+}
+</script>
+
+</body>
+</html>
